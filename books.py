@@ -35,6 +35,7 @@ async def read_books_by_author(author: str):
 
 @app.get('/books/{book_title}')
 async def read_book(book_title: str):
+    # Get with dynamic path "book_title"
     for book in BOOKS:
         if book.get('title').casefold() == book_title.casefold():
             return book
@@ -42,6 +43,7 @@ async def read_book(book_title: str):
 
 @app.get('/books/')
 async def read_books(category: str):
+    # Get by query params "category"
     filtered_books = []
     for book in BOOKS:
         if book.get('category').casefold() == category.casefold():
