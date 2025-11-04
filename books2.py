@@ -22,7 +22,8 @@ class Book:
 
 class BookRequest(BaseModel):
     # Use Optional for id since it will be generated and not provided by the user
-    id: Optional[int] = None
+    id: Optional[int] = Field(
+        description="The ID will be generated automatically", default=None)
     # With Field, we can add validation constraints
     title: str = Field(min_length=3)
     author: str = Field(min_length=1)
