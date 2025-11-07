@@ -11,13 +11,15 @@ class Book:
     author: str
     description: str
     rating: int
+    published_date: int
 
-    def __init__(self, id, title, author, description, rating):
+    def __init__(self, id, title, author, description, rating, published_date):
         self.id = id
         self.title = title
         self.author = author
         self.description = description
         self.rating = rating
+        self.published_date = published_date
 
 
 class BookRequest(BaseModel):
@@ -29,6 +31,7 @@ class BookRequest(BaseModel):
     author: str = Field(min_length=1)
     description: str = Field(min_length=1, max_length=100)
     rating: int = Field(gt=0, lt=6)
+    published_date: int = Field(gt=1800)
 
     # Adding example data for better documentation
     model_config = {
@@ -37,22 +40,28 @@ class BookRequest(BaseModel):
                 "title": "Book Model",
                 "author": "Darling",
                 "description": "A model representing a book",
-                "rating": 5
+                "rating": 5,
+                "published_date": 2010
             }
         }
     }
 
 
 BOOKS = [
-    Book(1, 'B1', 'Ali', 'A nice book!', 5),
-    Book(2, 'B2', 'Ehsan', 'A very nice book!', 4),
-    Book(3, 'B3', 'Ali', 'A normal book!', 3)
+    Book(1, 'B1', 'Ali', 'A nice book!', 5, 2015),
+    Book(2, 'B2', 'Ehsan', 'A very nice book!', 4, 2018),
+    Book(3, 'B3', 'Ali', 'A normal book!', 3, 2019)
 ]
 
 
 @app.get('/books')
 async def read_all_books():
     return BOOKS
+
+
+@app.get('/books/static')
+async def read_book():
+    print('static path')
 
 
 @app.get('/books/{book_id}')
@@ -67,6 +76,15 @@ async def read_book_by_rating(rating: int):
     filtered_books = []
     for book in BOOKS:
         if book.rating == rating:
+            filtered_books.append(book)
+    return filtered_books
+
+
+@app.get('/books/publish/')
+async def read_book_by_date(date: int):
+    filtered_books = []
+    for book in BOOKS:
+        if book.published_date == date:
             filtered_books.append(book)
     return filtered_books
 
