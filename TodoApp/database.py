@@ -12,7 +12,7 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./todos.db"
 
 # Create the database engine that manages connections to the database
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={
-                       'check_same_thread': False})  # Allow multiple threads to use the same connection
+    'check_same_thread': False})  # Allow multiple threads to use the same connection
 
 # Create a session factory that generates database sessions for each request
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
