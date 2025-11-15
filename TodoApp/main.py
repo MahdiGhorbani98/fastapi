@@ -4,6 +4,7 @@ from fastapi import FastAPI, Depends, HTTPException, Path
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from starlette import status
+from routers import auth
 
 # Import models so SQLAlchemy knows about the table definitions
 import models
@@ -16,6 +17,8 @@ app = FastAPI()
 
 # Create database tables defined on models.Base if they don't already exist
 models.Base.metadata.create_all(bind=engine)
+
+app.include_router(auth.router)
 
 
 def get_db():
