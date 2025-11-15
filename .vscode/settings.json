@@ -1,0 +1,8 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/fastapienv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/fastapienv/Lib/site-packages"
+    ]
+}
+
+
