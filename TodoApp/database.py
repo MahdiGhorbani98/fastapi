@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 # Define the database URL - using SQLite with a local file called todos.db
-SQLALCHEMY_DATABASE_URL = "sqlite:///./todos.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./todosapp.db"
 
 # Create the database engine that manages connections to the database
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={
