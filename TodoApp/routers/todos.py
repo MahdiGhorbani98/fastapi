@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException, Path, APIRouter
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from starlette import status
+from .auth import get_current_user
 
 # Import models so SQLAlchemy knows about the table definitions
 from models import Todos
@@ -23,6 +24,17 @@ def get_db():
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
+
+# This line defines a dependency used in FastAPI route functions to get information about the current user.
+#
+# - 'Depends' is a FastAPI feature to declare something as a dependency. When a route function uses a parameter with Depends(some_function),
+#   FastAPI will automatically call 'some_function' and use its return value as the parameter value.
+# - 'get_current_user' is a function (usually defined in your authentication code) that retrieves and verifies the user from the request, such as by reading a token.
+# - 'Annotated[dict, Depends(get_current_user)]' is a way to specify both the type (here, a dictionary) and additional metadata (the dependency).
+#   In this case, it says: "This is a dict, but to get its value, FastAPI should call get_current_user via Depends."
+#
+# So, 'user_dependency' can be used as a parameter type in routes, and FastAPI will handle user authentication transparently.
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 class TodoRequest(BaseModel):
@@ -57,8 +69,10 @@ async def read_todo(db: db_dependency, todo_id: int = Path(gt=0)):
 
 
 @router.post('/todo', status_code=status.HTTP_201_CREATED)
-async def create_todo(db: db_dependency, todo_request: TodoRequest):
-    todo_model = Todos(**todo_request.model_dump())
+async def create_todo(user: user_dependency, db: db_dependency, todo_request: TodoRequest):
+    if user is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+    todo_model = Todos(**todo_request.model_dump(), owner_id=user.get('id'))
 
     db.add(todo_model)
     db.commit()

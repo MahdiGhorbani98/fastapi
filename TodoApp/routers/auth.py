@@ -60,6 +60,8 @@ def authenticate_user(username: str, password: str, db):
 def create_access_token(username: str, user_id: int, expires_delta: timedelta):
     encode = {'sub': username, 'id': user_id}
     expires = datetime.now(timezone.utc) + expires_delta
+    # The 'update' method is a built-in method of Python's dict type.
+    # It updates the dictionary 'encode' by adding or modifying key-value pairs with those from the provided dictionary.
     encode.update({'exp': expires})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
