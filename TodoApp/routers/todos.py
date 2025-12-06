@@ -56,8 +56,9 @@ class TodoRequest(BaseModel):
 
 
 @router.get('/', status_code=status.HTTP_200_OK)
-async def read_all(db: db_dependency):
-    return db.query(Todos).all()
+# ? When we add user: user_dependency for funtions as params, the endpoint convert to a private endpoint
+async def read_all(user: user_dependency, db: db_dependency):
+    return db.query(Todos).filter(Todos.owner_id == user.get('id')).all()
 
 
 @router.get('/todo/{todo_id}', status_code=status.HTTP_200_OK)
