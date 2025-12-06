@@ -1,6 +1,6 @@
 # Import FastAPI to create the web application
 from fastapi import FastAPI
-from routers import auth, todos
+from routers import auth, todos, admin
 
 # Import models so SQLAlchemy knows about the table definitions
 import models
@@ -15,3 +15,4 @@ models.Base.metadata.create_all(bind=engine)
 
 app.include_router(auth.router)
 app.include_router(todos.router)
+app.include_router(admin.router)
